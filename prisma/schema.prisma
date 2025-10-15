@@ -1,0 +1,301 @@
+// Prisma Schema for AI 编程教育平台
+// 数据库：PostgreSQL (Supabase)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// 用户模型（User Model）
+// ============================================
+
+model User {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  name        String?
+  avatar      String?
+  role        UserRole @default(USER)
+  
+  // 审计字段
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  lastLoginAt DateTime?
+  
+  // 关系
+  purchases   Purchase[]
+  progress    Progress[]
+  reviews     Review[]
+  
+  @@map("users")
+  @@index([email])
+  @@index([role])
+}
+
+enum UserRole {
+  ADMIN
+  USER
+  GUEST
+}
+
+// ============================================
+// 课程模型（Course Model）
+// ============================================
+
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  
+  // 基本信息
+  title       String
+  subtitle    String?
+  description String
+  content     String   @db.Text
+  thumbnail   String?
+  previewVideoUrl String?
+  
+  // 定价信息
+  price       Decimal  @db.Decimal(10, 2)
+  originalPrice Decimal? @db.Decimal(10, 2)
+  currency    String   @default("CNY")
+  
+  // 课程属性
+  level       CourseLevel
+  duration    Int      // 总时长（分钟）
+  language    String   @default("zh")
+  
+  // 状态管理
+  status      CourseStatus @default(DRAFT)
+  published   Boolean  @default(false)
+  publishedAt DateTime?
+  
+  // 统计数据（冗余字段，提升查询性能）
+  studentsCount Int    @default(0)
+  rating      Decimal  @db.Decimal(3, 2) @default(0)
+  reviewCount Int      @default(0)
+  viewCount   Int      @default(0)
+  
+  // SEO 优化
+  metaTitle   String?
+  metaDescription String?
+  metaKeywords String?
+  
+  // 审计字段
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createdBy   String?
+  updatedBy   String?
+  
+  // 关系
+  chapters    Chapter[]
+  purchases   Purchase[]
+  tags        CourseTag[]
+  reviews     Review[]
+  
+  @@map("courses")
+  @@index([slug])
+  @@index([status, published])
+  @@index([level])
+  @@index([rating])
+  @@index([createdAt])
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CourseStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+// ============================================
+// 章节模型（Chapter Model）
+// ============================================
+
+model Chapter {
+  id          String   @id @default(cuid())
+  courseId    String
+  
+  // 基本信息
+  title       String
+  description String?  @db.Text
+  content     String   @db.Text
+  videoUrl    String?
+  duration    Int      // 秒
+  order       Int
+  
+  // 访问控制
+  isFree      Boolean  @default(false)
+  isPreview   Boolean  @default(false)
+  
+  // 审计字段
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关系
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress    Progress[]
+  
+  @@map("chapters")
+  @@index([courseId, order])
+}
+
+// ============================================
+// 购买记录模型（Purchase Model）
+// ============================================
+
+model Purchase {
+  id          String   @id @default(cuid())
+  userId      String
+  courseId    String
+  
+  // 支付信息
+  amount      Decimal  @db.Decimal(10, 2)
+  currency    String   @default("CNY")
+  stripePaymentId String @unique
+  stripeSessionId String?
+  
+  // 状态管理
+  status      PurchaseStatus @default(PENDING)
+  
+  // 退款信息
+  refundedAt  DateTime?
+  refundAmount Decimal? @db.Decimal(10, 2)
+  refundReason String?
+  
+  // 审计字段
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关系
+  user        User     @relation(fields: [userId], references: [id])
+  course      Course   @relation(fields: [courseId], references: [id])
+  
+  @@map("purchases")
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
+}
+
+// ============================================
+// 学习进度模型（Progress Model）
+// ============================================
+
+model Progress {
+  id          String   @id @default(cuid())
+  userId      String
+  chapterId   String
+  
+  // 进度信息
+  completed   Boolean  @default(false)
+  currentTime Int      @default(0) // 秒
+  completedAt DateTime?
+  
+  // 审计字段
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关系
+  user        User     @relation(fields: [userId], references: [id])
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  
+  @@map("progress")
+  @@unique([userId, chapterId])
+  @@index([userId])
+  @@index([completed])
+}
+
+// ============================================
+// 标签模型（Tag Model）
+// ============================================
+
+model Tag {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  color       String?  // 标签颜色
+  
+  // 统计数据
+  courseCount Int      @default(0)
+  
+  // 审计字段
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关系
+  courses     CourseTag[]
+  
+  @@map("tags")
+  @@index([slug])
+}
+
+// ============================================
+// 课程标签关联表（CourseTag Model）
+// ============================================
+
+model CourseTag {
+  courseId    String
+  tagId       String
+  
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  tag         Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  
+  @@id([courseId, tagId])
+  @@map("course_tags")
+}
+
+// ============================================
+// 评价模型（Review Model）
+// ============================================
+
+model Review {
+  id          String   @id @default(cuid())
+  userId      String
+  courseId    String
+  
+  // 评价内容
+  rating      Int      // 1-5
+  title       String?
+  content     String   @db.Text
+  
+  // 状态管理
+  status      ReviewStatus @default(PENDING)
+  
+  // 审计字段
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关系
+  user        User     @relation(fields: [userId], references: [id])
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  
+  @@map("reviews")
+  @@unique([userId, courseId])
+  @@index([courseId, status])
+  @@index([rating])
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
