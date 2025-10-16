@@ -1,6 +1,6 @@
 # AI 编程教育平台 (ai-edu.asia)
 
-一个 AI 驱动的付费编程教育平台，采用 Serverless 架构，实现极简、高性能、低成本、极致体验。
+一个 AI 驱动的编程教育平台，采用 Serverless 架构，实现极简、高性能、低成本、极致体验。
 
 ## 技术栈
 
@@ -118,9 +118,6 @@ ai-edu-asia/
 
 ## 文档
 
-- [需求文档](.kiro/specs/ai-edu-platform/requirements.md)
-- [设计文档](.kiro/specs/ai-edu-platform/design.md)
-- [任务列表](.kiro/specs/ai-edu-platform/tasks.md)
 
 ## License
 
