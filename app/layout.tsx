@@ -45,6 +45,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
+      <head>
+        <script src="https://cdn.tailwindcss.com"></script>
+      </head>
       <body className="antialiased">
         {children}
       </body>

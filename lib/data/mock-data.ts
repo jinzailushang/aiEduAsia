@@ -71,7 +71,7 @@ export const mockCourses: Course[] = [
     subtitle: '从零开始学习 Python 编程',
     description: '本课程适合零基础学员，通过实战项目学习 Python 编程基础知识。掌握变量、数据类型、控制流、函数等核心概念。',
     thumbnail: '/images/courses/python-basics.jpg',
-    price: 99,
+    price: 0,
     originalPrice: 199,
     level: 'BEGINNER',
     duration: 720, // 12 小时
@@ -88,7 +88,7 @@ export const mockCourses: Course[] = [
     subtitle: '深入理解 JavaScript 核心概念',
     description: '深入学习 JavaScript 的高级特性，包括闭包、原型链、异步编程等。适合有基础的开发者进阶学习。',
     thumbnail: '/images/courses/javascript-advanced.jpg',
-    price: 199,
+    price: 0,
     originalPrice: 299,
     level: 'INTERMEDIATE',
     duration: 1200, // 20 小时
@@ -105,7 +105,7 @@ export const mockCourses: Course[] = [
     subtitle: '使用 Next.js 构建完整的 Web 应用',
     description: '从前端到后端，学习如何使用 Next.js、React、TypeScript 构建现代化的全栈应用。包含数据库设计、API 开发、部署等。',
     thumbnail: '/images/courses/fullstack-development.jpg',
-    price: 299,
+    price: 0,
     originalPrice: 499,
     level: 'ADVANCED',
     duration: 1800, // 30 小时
@@ -122,7 +122,7 @@ export const mockCourses: Course[] = [
     subtitle: '掌握现代 React 开发',
     description: '深入学习 React Hooks，包括 useState、useEffect、useContext、自定义 Hooks 等。通过实际项目掌握现代 React 开发模式。',
     thumbnail: '/images/courses/react-hooks.jpg',
-    price: 159,
+    price: 0,
     originalPrice: 259,
     level: 'INTERMEDIATE',
     duration: 900, // 15 小时
@@ -139,7 +139,7 @@ export const mockCourses: Course[] = [
     subtitle: '类型安全的 JavaScript 开发',
     description: '学习 TypeScript 的核心概念，包括类型系统、接口、泛型等。提升代码质量和开发效率。',
     thumbnail: '/images/courses/typescript-fundamentals.jpg',
-    price: 129,
+    price: 0,
     originalPrice: 199,
     level: 'BEGINNER',
     duration: 600, // 10 小时
@@ -156,7 +156,7 @@ export const mockCourses: Course[] = [
     subtitle: '构建高性能后端服务',
     description: '学习使用 Node.js 构建 RESTful API，包括数据库操作、身份验证、错误处理等后端开发核心技能。',
     thumbnail: '/images/courses/nodejs-api.jpg',
-    price: 179,
+    price: 0,
     originalPrice: 279,
     level: 'INTERMEDIATE',
     duration: 1080, // 18 小时

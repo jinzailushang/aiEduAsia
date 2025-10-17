@@ -1,26 +1,8 @@
-'use client'
-
-import Link from 'next/link'
-import { useState } from 'react'
 import { getFeaturedCourses, siteStats } from '@/lib/data/mock-data'
-import { LoginDialog } from '@/components/auth/login-dialog'
-import { AuthProvider, useAuth } from '@/lib/auth/auth-context'
 
-function HomePage() {
+export default function Home() {
   const featuredCourses = getFeaturedCourses(3)
-  const [showLoginDialog, setShowLoginDialog] = useState(false)
-  const [loginMode, setLoginMode] = useState<'login' | 'signup'>('login')
-  const { user, signOut, loading } = useAuth()
-
-  const handleLoginClick = () => {
-    setLoginMode('login')
-    setShowLoginDialog(true)
-  }
-
-  const handleSignupClick = () => {
-    setLoginMode('signup')
-    setShowLoginDialog(true)
-  }
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       {/* Header */}
@@ -32,49 +14,31 @@ function HomePage() {
           </div>
           
           <div className="hidden md:flex items-center space-x-8">
-            <Link href="/courses" className="text-gray-600 hover:text-gray-900 transition-colors">
+            <a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors">
               课程
-            </Link>
-            <Link href="/about" className="text-gray-600 hover:text-gray-900 transition-colors">
+            </a>
+            <a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-900 transition-colors">
               关于
-            </Link>
+            </a>
           </div>
 
           <div className="flex items-center space-x-4">
-            {loading ? (
-              <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-            ) : user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-gray-700">欢迎，{user.user_metadata?.name || user.email}</span>
-                <Link 
-                  href="/dashboard" 
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  我的学习
-                </Link>
-                <button
-                  onClick={signOut}
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  退出
-                </button>
-              </div>
-            ) : (
-              <>
-                <button 
-                  onClick={handleLoginClick}
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
-                >
-                  登录
-                </button>
-                <button 
-                  onClick={handleSignupClick}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  开始学习
-                </button>
-              </>
-            )}
+            <a 
+              href="https://github.com/jinzailushang"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              登录
+            </a>
+            <a 
+              href="https://github.com/jinzailushang"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              开始学习
+            </a>
           </div>
         </nav>
       </header>
@@ -94,18 +58,22 @@ function HomePage() {
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              href="/courses" 
+            <a 
+              href="https://github.com/jinzailushang" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-8 py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all hover:scale-105 font-medium text-lg"
             >
               浏览课程
-            </Link>
-            <Link 
-              href="/demo" 
+            </a>
+            <a 
+              href="https://github.com/jinzailushang" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-8 py-4 bg-white text-gray-900 rounded-xl hover:bg-gray-50 transition-all border-2 border-gray-200 font-medium text-lg"
             >
               观看演示
-            </Link>
+            </a>
           </div>
 
           {/* Stats */}
@@ -135,7 +103,7 @@ function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredCourses.map((course, index) => {
+            {featuredCourses.map((course) => {
               const levelColors = {
                 BEGINNER: { bg: 'from-blue-500 to-blue-600', badge: 'bg-blue-100 text-blue-700', button: 'bg-blue-600 hover:bg-blue-700' },
                 INTERMEDIATE: { bg: 'from-purple-500 to-purple-600', badge: 'bg-purple-100 text-purple-700', button: 'bg-purple-600 hover:bg-purple-700' },
@@ -162,17 +130,23 @@ function HomePage() {
                     <p className="text-gray-600 mb-4">{course.subtitle}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-gray-900">¥{course.price}</span>
+                        {course.price === 0 ? (
+                          <span className="text-2xl font-bold text-green-600">免费</span>
+                        ) : (
+                          <span className="text-2xl font-bold text-gray-900">¥{course.price}</span>
+                        )}
                         {course.originalPrice && (
                           <span className="text-sm text-gray-500 line-through">¥{course.originalPrice}</span>
                         )}
                       </div>
-                      <Link 
-                        href={`/courses/${course.slug}`}
+                      <a 
+                        href="https://github.com/jinzailushang"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className={`px-4 py-2 ${colors.button} text-white rounded-lg transition-colors`}
                       >
                         查看详情
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -181,15 +155,17 @@ function HomePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link 
-              href="/courses" 
+            <a 
+              href="https://github.com/jinzailushang" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium"
             >
               查看全部课程
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </Link>
+            </a>
           </div>
         </div>
       </section>
@@ -244,21 +220,14 @@ function HomePage() {
           <p className="text-xl text-blue-100 mb-8">
             加入 1000+ 学习者，开启你的编程之旅
           </p>
-          {user ? (
-            <Link 
-              href="/dashboard" 
-              className="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-gray-50 transition-all hover:scale-105 font-medium text-lg"
-            >
-              进入学习中心
-            </Link>
-          ) : (
-            <button 
-              onClick={handleSignupClick}
-              className="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-gray-50 transition-all hover:scale-105 font-medium text-lg"
-            >
-              免费注册
-            </button>
-          )}
+          <a 
+            href="https://github.com/jinzailushang"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-gray-50 transition-all hover:scale-105 font-medium text-lg"
+          >
+            免费注册
+          </a>
         </div>
       </section>
 
@@ -279,26 +248,26 @@ function HomePage() {
             <div>
               <h3 className="text-white font-semibold mb-4">课程</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/courses" className="hover:text-white transition-colors">全部课程</Link></li>
-                <li><Link href="/courses?level=beginner" className="hover:text-white transition-colors">初级课程</Link></li>
-                <li><Link href="/courses?level=advanced" className="hover:text-white transition-colors">高级课程</Link></li>
+                <li><a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">全部课程</a></li>
+                <li><a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">初级课程</a></li>
+                <li><a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">高级课程</a></li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-white font-semibold mb-4">关于</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/about" className="hover:text-white transition-colors">关于我们</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">联系我们</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">博客</Link></li>
+                <li><a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">关于我们</a></li>
+                <li><a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">联系我们（858005598@qq.com）</a></li>
+                <li><a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">博客</a></li>
               </ul>
             </div>
 
             <div>
               <h3 className="text-white font-semibold mb-4">法律</h3>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/privacy" className="hover:text-white transition-colors">隐私政策</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors">服务条款</Link></li>
+                <li><a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">隐私政策</a></li>
+                <li><a href="https://github.com/jinzailushang" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">服务条款</a></li>
               </ul>
             </div>
           </div>
@@ -308,21 +277,6 @@ function HomePage() {
           </div>
         </div>
       </footer>
-
-      {/* 登录/注册弹窗 */}
-      <LoginDialog
-        isOpen={showLoginDialog}
-        onClose={() => setShowLoginDialog(false)}
-        mode={loginMode}
-      />
     </div>
-  )
-}
-
-export default function Home() {
-  return (
-    <AuthProvider>
-      <HomePage />
-    </AuthProvider>
   )
 }

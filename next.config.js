@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    webpack: (config) => {
+        config.resolve.alias = {
+            ...config.resolve.alias,
+        }
+        return config
+    },
     // 图片优化
     images: {
         domains: ['cdn.ai-edu.asia', 'supabase.co'],
